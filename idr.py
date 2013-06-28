@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/env python
 
 import os
 import sjm
@@ -12,6 +12,8 @@ PROJECT = conf.SGE_PROJECT
 R_BINARY = conf.R_BINARY
 SPP_BINARY = conf.SPP_BINARY
 SPP_BINARY_NO_DUPS = conf.SPP_BINARY_NO_DUPS
+SPP_LIBRARY = conf.SPP_LIBRARY
+GLOBAL_TMP_DIR = conf.GLOBAL_TMP_DIR
 	
 def idr_analysis_cmd(hit1, hit2, output, ranking_measure, genome):
 	cmd = R_BINARY + ' '
@@ -41,22 +43,27 @@ def cross_correlation_analysis(name, sample, no_duplicates=False, options=None):
 	for rep in sample.replicates:
 		# Convert merged and filtered eland file to tagAlign
 		rep.tagAlign = os.path.join(rep.temp_dir(sample), '%s.tagAlign' % rep.rep_name(sample))
-		cmd = os.path.join(SUBMISSION_BIN_DIR, 'convert2tagAlign.py')
+		#cmd = os.path.join(SUBMISSION_BIN_DIR, 'convert2tagAlign.py')
+		cmd = os.path.join(BIN_DIR, 'eland2tagAlign.py')
 		cmd += ' %s' % rep.merged_file_location
 		cmd += ' %s' % rep.tagAlign
 		cmd += ' %s' % sample.genome
 		cmds.append(cmd)
-		
+
 		# Run SPP
+		cmd = 'export R_LIBS_USER=%s:$R_LIBS_USER' % SPP_LIBRARY
+		cmds.append(cmd)
+		cmd = R_BINARY + ' '
 		if no_duplicates:
-			cmd = SPP_BINARY_NO_DUPS
+			cmd += SPP_BINARY_NO_DUPS
 		else:
-			cmd = SPP_BINARY
+			cmd += SPP_BINARY
+		cmd += ' -tmpdir=%s' % GLOBAL_TMP_DIR
 		cmd += ' -rf' # overwrite plot files if exists
 		cmd += ' -c=%s' % rep.tagAlign
 		cmd += ' -savp'
 		cmd += ' -x=-50:40' # manually exclude fragment lengths [-50,40]
-		cmd += ' -out=%s' % sample.spp_stats
+ 		cmd += ' -out=%s' % sample.spp_stats
 		if 'filtchr' in options:
 			for filtchr in options['filtchr']:
 				cmd += ' -filtchr=%s' % filtchr # ignore reads from filtchr chr
