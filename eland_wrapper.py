@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/env python
 
 '''Determines read length of FASTA file in order to call correct eland'''
 

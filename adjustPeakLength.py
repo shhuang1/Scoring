@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/env python
 
 '''Adjusts large peaks (>2000 bp) to be no greater than 2000 bp in length.
 Used to fix MACS calling of large broad peaks which causes issues in IDR.

@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/env python
 
 ### NOTE:  Assuming read file has already been filtered for only uniquely
 ## mappable reads.

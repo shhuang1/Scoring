@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/env python
 
 '''Simple PeakSeq wrapper, simply returns if the input file isn't found, instead
 of failing.'''

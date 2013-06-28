@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/env python
 
 import sjm
 import os
@@ -17,7 +17,7 @@ QUEUE = conf.QUEUE
 PROJECT = conf.SGE_PROJECT
 
 NAME = 'macs2'
-USE_CONTROL_LOCK = False
+USE_CONTROL_LOCK = True
 
 from peakseq import archive_results
 
