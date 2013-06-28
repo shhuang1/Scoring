@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/env python
 
 import ConfigParser
 import os
@@ -17,6 +17,7 @@ SUBMISSION_BIN_DIR = cp.get('globals', 'SUBMISSION_BIN_DIR')
 R_BINARY = cp.get('globals', 'R_BINARY')
 SPP_BINARY = cp.get('globals', 'SPP_BINARY')
 SPP_BINARY_NO_DUPS = cp.get('globals', 'SPP_BINARY_NO_DUPS')
+SPP_LIBRARY = cp.get('globals', 'SPP_LIBRARY')
 MACS_BINARY = cp.get('globals', 'MACS_BINARY')
 MACS_LIBRARY = cp.get('globals', 'MACS_LIBRARY')
 MACS2_BINARY = cp.get('globals', 'MACS2_BINARY')
