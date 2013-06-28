@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/env python
 
 import sjm
 import os
@@ -15,7 +15,7 @@ PEAKSEQ_BINARY = conf.PEAKSEQ_BINARY
 BIN_SIZE = conf.PEAKSEQ_BIN_SIZE
 
 NAME = 'peakseq'
-USE_CONTROL_LOCK = False
+USE_CONTROL_LOCK = True
 
 def archive_results(name, results_dir, archive_file):
  	if os.path.exists(archive_file):
@@ -82,9 +82,16 @@ def form_control_files(name, control):
 	
 def form_sample_files(name, sample):
 	jobs = []
+#	for rep in sample.replicates:
+#		jobs.append(sjm.Job(rep.rep_name(sample) + '_merge', form_replicate_files(rep, sample), queue=QUEUE, project=PROJECT))
+#	jobs.append(sjm.Job(sample.run_name + '_All_merge', form_replicate_files(sample.combined_replicate, sample), queue=QUEUE, project=PROJECT))
+#	sample.add_jobs(name, jobs)
+	allmerge_job = sjm.Job(sample.run_name + '_All_merge', form_replicate_files(sample.combined_replicate, sample), queue=QUEUE, project=PROJECT) 
 	for rep in sample.replicates:
-		jobs.append(sjm.Job(rep.rep_name(sample) + '_merge', form_replicate_files(rep, sample), queue=QUEUE, project=PROJECT))
-	jobs.append(sjm.Job(sample.run_name + '_All_merge', form_replicate_files(sample.combined_replicate, sample), queue=QUEUE, project=PROJECT))
+		repmerge_job = sjm.Job(rep.rep_name(sample) + '_merge', form_replicate_files(rep, sample), queue=QUEUE, project=PROJECT)
+		jobs.append(repmerge_job)
+		allmerge_job.add_dependency(repmerge_job)
+	jobs.append(allmerge_job)
 	sample.add_jobs(name, jobs)
 				
 def form_replicate_files(rep, sample):
